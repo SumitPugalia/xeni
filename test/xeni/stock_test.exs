@@ -63,5 +63,43 @@ defmodule Xeni.StockTest do
       ohlc = ohlc_fixture()
       assert %Ecto.Changeset{} = Stock.change_ohlc(ohlc)
     end
+
+    test "average_ohlc/2 returns average ohlc" do
+      valid_attrs = %{
+        close: 1000,
+        high: 2000,
+        low: 3000,
+        open: 4000,
+        timestamp: System.os_time(:second) - 600
+      }
+
+      assert {:ok, %OHLC{}} = Stock.create_ohlc(valid_attrs)
+
+      valid_attrs = %{
+        close: 4000,
+        high: 2000,
+        low: 1000,
+        open: 4000,
+        timestamp: System.os_time(:second) - 900
+      }
+
+      assert {:ok, %OHLC{}} = Stock.create_ohlc(valid_attrs)
+
+      assert %{
+               close_moving_average: 2500,
+               high_moving_average: 2000,
+               low_moving_average: 2000,
+               open_moving_average: 4000,
+               total_moving_average: 2625
+             } == Stock.average_ohlc(:items, 2)
+
+      assert %{
+               close_moving_average: 2500,
+               high_moving_average: 2000,
+               low_moving_average: 2000,
+               open_moving_average: 4000,
+               total_moving_average: 2625
+             } == Stock.average_ohlc(:hour, 1)
+    end
   end
 end
