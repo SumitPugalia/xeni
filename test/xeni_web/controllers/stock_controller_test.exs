@@ -3,12 +3,14 @@ defmodule XeniWeb.StockControllerTest do
 
   describe "insert ohlc data" do
     test "successfully inserts ohlc data", %{conn: conn} do
+      now = DateTime.utc_now()
+
       create_ohlc_attrs = %{
         "close" => 16.04,
         "high" => 29.13,
         "low" => 15.91,
         "open" => 26.83,
-        "timestamp" => DateTime.utc_now() |> DateTime.to_string()
+        "timestamp" => now |> DateTime.to_string()
       }
 
       conn =
@@ -24,8 +26,10 @@ defmodule XeniWeb.StockControllerTest do
                "timestamp" => timestamp
              } = json_response(conn, 200)
 
+      {:ok, dt, _} = timestamp |> DateTime.from_iso8601()
       assert is_integer(id)
-      assert timestamp |> IO.inspect()
+      assert dt |> DateTime.to_date() == DateTime.to_date(now)
+      assert dt |> DateTime.to_time() == now |> DateTime.truncate(:second) |> DateTime.to_time()
     end
 
     test "erorrs to inserts ohlc data for missing data", %{conn: conn} do
@@ -72,6 +76,32 @@ defmodule XeniWeb.StockControllerTest do
   end
 
   describe "average ohlc data" do
+    test "gets average of ohlc data for nil data", %{conn: conn} do
+      conn =
+        conn
+        |> get(~p"/api/average?window=last_1_hour")
+
+      assert %{
+               "close_moving_average" => nil,
+               "high_moving_average" => nil,
+               "low_moving_average" => nil,
+               "open_moving_average" => nil,
+               "total_moving_average" => nil
+             } == json_response(conn, 200)
+
+      conn =
+        conn
+        |> get(~p"/api/average?window=last_1_items")
+
+      assert %{
+               "close_moving_average" => nil,
+               "high_moving_average" => nil,
+               "low_moving_average" => nil,
+               "open_moving_average" => nil,
+               "total_moving_average" => nil
+             } == json_response(conn, 200)
+    end
+
     test "gets average of ohlc data by items count", %{conn: conn} do
       ## Latest
       ohlc_fixture(%{timestamp: System.os_time(:second)})
@@ -120,6 +150,26 @@ defmodule XeniWeb.StockControllerTest do
                "open_moving_average" => 60.0,
                "total_moving_average" => 35.0
              } == json_response(conn, 200)
+    end
+
+    test "errors to get average of ohlc data by invalid window", %{conn: conn} do
+      conn =
+        conn
+        |> get(~p"/api/average?window=last_2_item")
+
+      assert %{"errors" => %{"detail" => "window is invalid"}} == json_response(conn, 400)
+
+      conn =
+        conn
+        |> get(~p"/api/average?window=last_invalid_item")
+
+      assert %{"errors" => %{"detail" => "window is invalid"}} == json_response(conn, 400)
+
+      conn =
+        conn
+        |> get(~p"/api/average?window=last_invalid_hour")
+
+      assert %{"errors" => %{"detail" => "window is invalid"}} == json_response(conn, 400)
     end
   end
 end

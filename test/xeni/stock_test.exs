@@ -86,19 +86,19 @@ defmodule Xeni.StockTest do
       assert {:ok, %OHLC{}} = Stock.create_ohlc(valid_attrs)
 
       assert %{
-               close_moving_average: 2500,
-               high_moving_average: 2000,
-               low_moving_average: 2000,
-               open_moving_average: 4000,
-               total_moving_average: 2625
+               close_moving_average: 3000,
+               high_moving_average: 4000,
+               low_moving_average: 1000,
+               open_moving_average: 2000,
+               total_moving_average: 2500
              } == Stock.average_ohlc(:items, 2)
 
       assert %{
-               close_moving_average: 2500,
-               high_moving_average: 2000,
-               low_moving_average: 2000,
-               open_moving_average: 4000,
-               total_moving_average: 2625
+               close_moving_average: 3000,
+               high_moving_average: 4000,
+               low_moving_average: 1000,
+               open_moving_average: 2000,
+               total_moving_average: 2500
              } == Stock.average_ohlc(:hour, 1)
     end
   end
