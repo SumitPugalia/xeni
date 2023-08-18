@@ -1,18 +1,24 @@
 # Xeni
 
+Setup
+  * Install Erlang OTP 24
+  * Install Elixir 1.14.3
+  * Install Postgres
+
 To start your Phoenix server:
 
-  * Run `mix setup` to install and setup dependencies
+  * Run `mix setup` to install and setup dependencies.
   * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+API DOC
+  * http://localhost:4000/swaggerui/
 
-## Learn more
+TEST
+  * mix test
 
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix
+NOTE
+  * Haven't used any auth.
+  * Have stored all the values in integer to prevent precision loss.
+  * Conversion of incoming params is handled by controller & outgoing params is handled by views
