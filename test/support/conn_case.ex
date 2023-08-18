@@ -28,6 +28,7 @@ defmodule XeniWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import XeniWeb.ConnCase
+      import Xeni.StockFixtures
     end
   end
 
