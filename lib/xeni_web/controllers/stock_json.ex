@@ -12,4 +12,13 @@ defmodule XeniWeb.StockJSON do
     }
   end
 
+  def average(%{average: average}) do
+    %{
+      total_moving_average: average.total_moving_average / 100,
+      open_moving_average: average.open_moving_average / 100,
+      high_moving_average: average.high_moving_average / 100,
+      close_moving_average: average.close_moving_average / 100,
+      low_moving_average: average.low_moving_average / 100
+    }
+  end
 end

@@ -101,4 +101,55 @@ defmodule Xeni.Stock do
   def change_ohlc(%OHLC{} = ohlc, attrs \\ %{}) do
     OHLC.changeset(ohlc, attrs)
   end
+
+  @doc """
+  Returns a map of movinng averages
+
+  ## Examples
+
+      iex> average_ohlc(ohlc)
+      %{
+        close_moving_average: 1554,
+        high_moving_average: 2413,
+        low_moving_average: 891,
+        open_moving_average: 2642,
+        total_moving_average: 1875
+      }
+
+
+  """
+  def average_ohlc(:items, size) do
+    inner_query =
+      from OHLC,
+        order_by: [desc: :timestamp],
+        limit: ^size
+
+    query =
+      from s in subquery(inner_query),
+        select: %{
+          total_moving_average: type(avg(s.open + s.high + s.low + s.close) / 4, :integer),
+          open_moving_average: type(avg(s.open), :integer),
+          high_moving_average: type(avg(s.high), :integer),
+          close_moving_average: type(avg(s.close), :integer),
+          low_moving_average: type(avg(s.low), :integer)
+        }
+
+    Repo.one(query)
+  end
+
+  def average_ohlc(:hour, size) do
+    now = System.os_time(:second)
+
+    from(s in OHLC,
+      where: s.timestamp >= ^now - ^size * 3600,
+      select: %{
+        total_moving_average: type(avg(s.open + s.high + s.low + s.close) / 4, :integer),
+        open_moving_average: type(avg(s.open), :integer),
+        high_moving_average: type(avg(s.high), :integer),
+        close_moving_average: type(avg(s.close), :integer),
+        low_moving_average: type(avg(s.low), :integer)
+      }
+    )
+    |> Repo.one()
+  end
 end

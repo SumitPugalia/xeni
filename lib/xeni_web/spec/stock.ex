@@ -10,7 +10,7 @@ defmodule XeniWeb.Spec.Stock do
         open: %Schema{type: :float, description: "open data"},
         high: %Schema{type: :float, description: "high data"},
         low: %Schema{type: :float, description: "low data"},
-        close: %Schema{type: :float, description: "close data"},
+        close: %Schema{type: :float, description: "close data"}
       },
       required: [
         :timestamp,
@@ -38,7 +38,7 @@ defmodule XeniWeb.Spec.Stock do
         open: %Schema{type: :float, description: "open data"},
         high: %Schema{type: :float, description: "high data"},
         low: %Schema{type: :float, description: "low data"},
-        close: %Schema{type: :float, description: "close data"},
+        close: %Schema{type: :float, description: "close data"}
       },
       required: [
         :id,
@@ -59,7 +59,7 @@ defmodule XeniWeb.Spec.Stock do
     })
   end
 
-  defmodule MovingAvergaeResponse do
+  defmodule MovingAverageResponse do
     OpenApiSpex.schema(%{
       type: :object,
       properties: %{
@@ -81,7 +81,7 @@ defmodule XeniWeb.Spec.Stock do
         open_moving_average: 26.83,
         high_moving_average: 26.83,
         close_moving_average: 26.83,
-        low_moving_average: 26.83,
+        low_moving_average: 26.83
       }
     })
   end
