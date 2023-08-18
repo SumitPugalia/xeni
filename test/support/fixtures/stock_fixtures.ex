@@ -11,10 +11,10 @@ defmodule Xeni.StockFixtures do
     {:ok, ohlc} =
       attrs
       |> Enum.into(%{
-        close: 1000,
-        high: 2000,
-        low: 3000,
-        open: 4000,
+        close: 3000,
+        high: 4000,
+        low: 1000,
+        open: 2000,
         timestamp: System.os_time(:second)
       })
       |> Xeni.Stock.create_ohlc()

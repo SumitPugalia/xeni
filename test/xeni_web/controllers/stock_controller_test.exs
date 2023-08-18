@@ -70,4 +70,56 @@ defmodule XeniWeb.StockControllerTest do
              } == json_response(conn, 400)
     end
   end
+
+  describe "average ohlc data" do
+    test "gets average of ohlc data by items count", %{conn: conn} do
+      ## Latest
+      ohlc_fixture(%{timestamp: System.os_time(:second)})
+      ## 3 hours old
+      ohlc_fixture(%{open: 10000, timestamp: System.os_time(:second) - 3 * 60 * 60})
+
+      conn =
+        conn
+        |> get(~p"/api/average?window=last_2_items")
+
+      assert %{
+               "close_moving_average" => 30.0,
+               "high_moving_average" => 40.0,
+               "low_moving_average" => 10.0,
+               "open_moving_average" => 60.0,
+               "total_moving_average" => 35.0
+             } == json_response(conn, 200)
+    end
+
+    test "gets average of ohlc data by hour", %{conn: conn} do
+      ## Latest
+      ohlc_fixture(%{timestamp: System.os_time(:second)})
+      ## 3 hours old
+      ohlc_fixture(%{open: 10000, timestamp: System.os_time(:second) - 3 * 60 * 60})
+
+      conn =
+        conn
+        |> get(~p"/api/average?window=last_1_hour")
+
+      assert %{
+               "close_moving_average" => 30.0,
+               "high_moving_average" => 40.0,
+               "low_moving_average" => 10.0,
+               "open_moving_average" => 20.0,
+               "total_moving_average" => 25.0
+             } == json_response(conn, 200)
+
+      conn =
+        conn
+        |> get(~p"/api/average?window=last_4_hour")
+
+      assert %{
+               "close_moving_average" => 30.0,
+               "high_moving_average" => 40.0,
+               "low_moving_average" => 10.0,
+               "open_moving_average" => 60.0,
+               "total_moving_average" => 35.0
+             } == json_response(conn, 200)
+    end
+  end
 end

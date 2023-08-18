@@ -66,20 +66,20 @@ defmodule Xeni.StockTest do
 
     test "average_ohlc/2 returns average ohlc" do
       valid_attrs = %{
-        close: 1000,
-        high: 2000,
-        low: 3000,
-        open: 4000,
+        close: 3000,
+        high: 4000,
+        low: 1000,
+        open: 2000,
         timestamp: System.os_time(:second) - 600
       }
 
       assert {:ok, %OHLC{}} = Stock.create_ohlc(valid_attrs)
 
       valid_attrs = %{
-        close: 4000,
-        high: 2000,
+        close: 3000,
+        high: 4000,
         low: 1000,
-        open: 4000,
+        open: 2000,
         timestamp: System.os_time(:second) - 900
       }
 
